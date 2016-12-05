@@ -1,2 +1,2 @@
 # role-wcl-docker
-> an annsible role to install, configure and manage docker 
+> an ansible role to install, configure and manage docker 
