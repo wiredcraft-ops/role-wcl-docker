@@ -1,7 +1,7 @@
 ---
 
 - name: Add docker-engine repo and install docker
-  raw: "curl -fsSL https://get.docker.com/ | sh"
+  shell: "curl -fsSL https://get.docker.com/ | sh"
   args:
     creates: /etc/yum.repos.d/docker-main.repo
 
@@ -14,8 +14,8 @@
 - name: Add registry mirror to docker
   replace:
     dest: /usr/lib/systemd/system/docker.service
-    regexp: "ExecStart=/usr/bin/dockerd"
-    replace: "ExecStart=/usr/bin/dockerd --registry-mirror={{ docker_mirror_url }}"
+    regexp: "ExecStart=/usr/bin/dockerd$"
+    replace: "ExecStart=/usr/bin/dockerd --registry-mirror {{ docker_registry_mirror_url }} --insecure-registry {{ docker_insecure_registry_url }} "
   notify: Run systemd daemon-reload & Restart docker
 
 - name: Install python-pip
