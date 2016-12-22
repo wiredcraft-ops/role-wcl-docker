@@ -17,7 +17,15 @@
     dest: /usr/lib/systemd/system/docker.service
     regexp: "ExecStart=/usr/bin/dockerd$"
     replace: "ExecStart=/usr/bin/dockerd {% if docker_registry_mirror_url %} --registry-mirror={{ docker_registry_mirror_url }} {% endif %} {% if docker_insecure_registry_url %} --insecure-registry={{ docker_insecure_registry_url }} {% endif %}"
-  notify: Run systemd daemon-reload & Restart docker
+  # notify: won't run at once
+  register: daemon_reload
+
+- name: Run systemd daemon-reload and restart docker
+  systemd:
+    daemon_reload: true
+    name: docker
+    state: restarted
+  when: daemon_reload.changed
 
 - name: Install python-pip
   yum:
