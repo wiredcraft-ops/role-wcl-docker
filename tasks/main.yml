@@ -13,9 +13,10 @@
 
 - name: Add registry mirror to docker
   replace:
+    # TODO: EnvironmentFile
     dest: /usr/lib/systemd/system/docker.service
     regexp: "ExecStart=/usr/bin/dockerd$"
-    replace: "ExecStart=/usr/bin/dockerd --registry-mirror {{ docker_registry_mirror_url }} --insecure-registry {{ docker_insecure_registry_url }} "
+    replace: "ExecStart=/usr/bin/dockerd {% if docker_registry_mirror_url %} --registry-mirror={{ docker_registry_mirror_url }} {% endif %} {% if docker_insecure_registry_url %} --insecure-registry={{ docker_insecure_registry_url }} {% endif %}"
   notify: Run systemd daemon-reload & Restart docker
 
 - name: Install python-pip
