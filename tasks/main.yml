@@ -32,12 +32,14 @@
     name: epel-release
     state: present
 
-- name: Install python-pip
+- name: Install python2-pip
   yum:
-    name: python-pip
+    name: python2-pip # python2-pip/python34-pip
     state: present
 
 - name: Install docker-py
   pip:
     name: docker-py
     version: 1.9.0
+
+# PyYAML/docker-compose
