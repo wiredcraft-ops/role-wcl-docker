@@ -1,9 +1,15 @@
 ---
-
 - name: Add docker-engine repo and install docker
   shell: "curl -fsSL https://get.docker.com/ | sh"
+  register: docker_result
   args:
     creates: /etc/yum.repos.d/docker-main.repo
+
+- name: Remove docker-main.repo when last task fail
+  file:
+    name: /etc/yum.repos.d/docker-main.repo
+    state: absent
+  when: "docker_result.rc != 0"
 
 - name: Start and Enable docker
   service:
@@ -42,4 +48,9 @@
     name: docker-py
     version: 1.9.0
 
-# PyYAML/docker-compose
+- name: Install PyYAML/docker-compose
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - PyYAML
+    - docker-compose
