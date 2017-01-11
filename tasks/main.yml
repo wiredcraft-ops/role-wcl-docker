@@ -17,14 +17,34 @@
     state: started
     enabled: true
 
-- name: Add registry mirror to docker
+- name: Add registry mirror to docker # upgrade docker will reset this configuration - see blow
   replace:
-    # TODO: EnvironmentFile
     dest: /usr/lib/systemd/system/docker.service
     regexp: "ExecStart=/usr/bin/dockerd$"
     replace: "ExecStart=/usr/bin/dockerd {% if docker_registry_mirror_url %} --registry-mirror={{ docker_registry_mirror_url }} {% endif %} {% if docker_insecure_registry_url %} --insecure-registry={{ docker_insecure_registry_url }} {% endif %}"
   # notify: won't run at once
   register: daemon_reload
+
+# use docker.service.d - https://docs.docker.com/engine/admin/systemd/
+#- name: Create docker.service.d directory
+#  file:
+#    path: /usr/lib/systemd/system/docker.service.d # specific for CentOS
+#    owner: root
+#    group: root
+#    mode: 0755
+#
+#- name: Add registry mirror to docker
+#  blockinfile:
+#    dest: /usr/lib/systemd/system/docker.service.d/role.conf
+#    block: |
+#      [Service]
+#      ExecStart=
+#      ExecStart=/usr/bin/dockerd {% if docker_registry_mirror_url %} --registry-mirror={{ docker_registry_mirror_url }} {% endif %} {% if docker_insecure_registry_url %} --insecure-registry={{ docker_insecure_registry_url }} {% endif %}
+#    create: true
+#    owner: root
+#    group: root
+#    mode: 0644
+#  register: daemon_reload
 
 - name: Run systemd daemon-reload and restart docker
   systemd:
