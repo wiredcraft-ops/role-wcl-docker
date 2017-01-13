@@ -1,15 +1,12 @@
 ---
+- name: Check if docker is installed
+  command: which docker
+  register: docker_installed
+  ignore_errors: true
+
 - name: Add docker-engine repo and install docker
   shell: "curl -fsSL https://get.docker.com/ | sh"
-  register: docker_result
-  args:
-    creates: /etc/yum.repos.d/docker-main.repo
-
-- name: Remove docker-main.repo when last task fail
-  file:
-    name: /etc/yum.repos.d/docker-main.repo
-    state: absent
-  when: "docker_result.rc != 0"
+  when: docker_installed.rc != 0
 
 - name: Start and Enable docker
   service:
