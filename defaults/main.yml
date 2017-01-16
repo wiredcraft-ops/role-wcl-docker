@@ -1,4 +1,12 @@
 ---
-docker_registry_mirror_url: ''
+docker_registry_mirror_url: ""
 # TODO: []
-docker_insecure_registry_url: ''
+docker_insecure_registry_url: ""
+
+# Pip versions
+pip_docker_py_version: "1.9.0"
+pip_pyyaml_version: "3.12"
+pip_docker_compose_version: "1.9.0"
+
+# Users belonging to the docker group
+docker_users: []
