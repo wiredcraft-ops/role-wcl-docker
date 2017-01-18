@@ -8,5 +8,8 @@ pip_docker_py_version: "1.9.0"
 pip_pyyaml_version: "3.12"
 pip_docker_compose_version: "1.9.0"
 
+# Enable pypi douban mirror
+pip_enable_douban_mirror: false
+
 # Users belonging to the docker group
 docker_users: []
