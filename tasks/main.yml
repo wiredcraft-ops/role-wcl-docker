@@ -17,7 +17,7 @@
 - name: Add registry mirror to docker # upgrade docker will reset this configuration - see blow
   replace:
     dest: /usr/lib/systemd/system/docker.service
-    regexp: "ExecStart=/usr/bin/dockerd\s*$"
+    regexp: 'ExecStart=/usr/bin/dockerd\s*$' # https://github.com/ansible/ansible/issues/4302
     replace: "ExecStart=/usr/bin/dockerd {% if docker_registry_mirror_url %} --registry-mirror={{ docker_registry_mirror_url }} {% endif %} {% if docker_insecure_registry_url %} --insecure-registry={{ docker_insecure_registry_url }} {% endif %}"
   # notify: won't run at once
   register: daemon_reload
