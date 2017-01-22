@@ -64,7 +64,7 @@
   pip:
     name: "{{ item.name }}"
     version: "{{ item.version }}"
-    extra_args: "{% if pip_enable_douban_mirror %} -i http://pypi.douban.com/simple --trusted-host pypi.douban.com {% endif %}"
+    extra_args: "{% if pip_enable_ustc_mirror %} -i https://mirrors.ustc.edu.cn/pypi/web/simple {% endif %}"
   with_items:
     - name: docker-py
       version: "{{ pip_docker_py_version }}"
