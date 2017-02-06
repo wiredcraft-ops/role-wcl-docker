@@ -6,7 +6,7 @@
   ignore_errors: true
 
 - name: Docker | Add docker-engine repo and install docker
-  shell: "curl -fsSL https://get.docker.com/ | sh {% if docker_china_mirror %}--mirror AzureChinaCloud{% endif %}"
+  shell: "curl -fsSL https://get.docker.com/ | bash -s - {% if docker_china_mirror %}--mirror AzureChinaCloud{% endif %}"
   when: docker_installed.rc != 0
 
 - name: Docker | Start and Enable docker
