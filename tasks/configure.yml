@@ -1,12 +1,12 @@
 ---
 # Assuming we're on systemd based Linux Distrib ...
-- name: Prepare Systemd custom config folder
+- name: Docker | Prepare Systemd custom config folder
   file:
     name: /etc/systemd/system/docker.service.d
     state: directory
     mode: 0755
 
-- name: Add docker.service custom config
+- name: Docker | Add docker.service custom config
   template:
     src: etc_systemd_system_docker.service.d_custom.conf.j2
     dest: /etc/systemd/system/docker.service.d/custom.conf

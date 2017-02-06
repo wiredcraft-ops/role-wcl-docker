@@ -1,23 +1,23 @@
 ---
-- name: [RedHat] Install epel-release
+- name: Docker | RedHat | Install epel-release
   yum:
     name: epel-release
     state: present
   when: '{{ ansible_os_family }} == "RedHat"'
 
-- name: [RedHat] Install python-pip
+- name: Docker | RedHat | Install python-pip
   yum:
     name: python-pip
     state: present
   when: '{{ ansible_os_family }} == "RedHat"'
 
-- name: [Debian] Install python-pip
+- name: Docker | Debian | Install python-pip
   apt-get:
     name: python-pip
     state: present
   when: '{{ ansible_os_family }} == "Debian"'
 
-- name: Install Pip extensions
+- name: Docker | Install Pip extensions
   pip:
     name: "{{ item.name }}"
     version: "{{ item.version }}"

@@ -1,6 +1,6 @@
 ---
 # Add users allowed to manage docker
-- name: Add the Users to the docker group
+- name: Docker | Add the Users to the docker group
   user:
     name: "{{ item }}"
     createhome: False

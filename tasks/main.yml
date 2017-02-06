@@ -1,15 +1,15 @@
 ---
 # TODO - get rid of this check and rely on a created file or something ...
-- name: Check if docker is installed
+- name: Docker | Check if docker is installed
   command: which docker
   register: docker_installed
   ignore_errors: true
 
-- name: Add docker-engine repo and install docker
+- name: Docker | Add docker-engine repo and install docker
   shell: "curl -fsSL https://get.docker.com/ | sh {% if docker_china_mirror %}--mirror AzureChinaCloud{% endif %}"
   when: docker_installed.rc != 0
 
-- name: Start and Enable docker
+- name: Docker | Start and Enable docker
   service:
     name: docker
     state: started
