@@ -17,4 +17,5 @@
   service:
     name: docker
     state: restarted
+    daemon_reload: yes
   when: docker_systemd_custom_conf.changed
