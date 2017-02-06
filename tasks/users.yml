@@ -1,0 +1,10 @@
+---
+# Add users allowed to manage docker
+- name: Add the Users to the docker group
+  user:
+    name: "{{ item }}"
+    createhome: False
+    groups: docker
+    append: True
+  with_items: "{{ docker_users }}"
+

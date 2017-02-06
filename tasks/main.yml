@@ -1,11 +1,12 @@
 ---
+# TODO - get rid of this check and rely on a created file or something ...
 - name: Check if docker is installed
   command: which docker
   register: docker_installed
   ignore_errors: true
 
 - name: Add docker-engine repo and install docker
-  shell: "curl -fsSL https://get.docker.com/ | sh"
+  shell: "curl -fsSL https://get.docker.com/ | sh {% if docker_china_mirror %}--mirror AzureChinaCloud{% endif %}"
   when: docker_installed.rc != 0
 
 - name: Start and Enable docker
@@ -14,70 +15,6 @@
     state: started
     enabled: true
 
-- name: Add registry mirror to docker # upgrade docker will reset this configuration - see blow
-  lineinfile:
-    dest: /usr/lib/systemd/system/docker.service
-    regexp: 'ExecStart=/usr/bin/dockerd.*$' # https://github.com/ansible/ansible/issues/4302
-    line: "ExecStart=/usr/bin/dockerd {% if docker_registry_mirror_url %} --registry-mirror={{ docker_registry_mirror_url }} {% endif %} {% if docker_insecure_registry_url %} --insecure-registry={{ docker_insecure_registry_url }} {% endif %}"
-  # notify: won't run at once
-  register: daemon_reload
-
-# use docker.service.d - https://docs.docker.com/engine/admin/systemd/
-#- name: Create docker.service.d directory
-#  file:
-#    path: /usr/lib/systemd/system/docker.service.d # specific for CentOS
-#    owner: root
-#    group: root
-#    mode: 0755
-#
-#- name: Add registry mirror to docker
-#  blockinfile:
-#    dest: /usr/lib/systemd/system/docker.service.d/role.conf
-#    block: |
-#      [Service]
-#      ExecStart=
-#      ExecStart=/usr/bin/dockerd {% if docker_registry_mirror_url %} --registry-mirror={{ docker_registry_mirror_url }} {% endif %} {% if docker_insecure_registry_url %} --insecure-registry={{ docker_insecure_registry_url }} {% endif %}
-#    create: true
-#    owner: root
-#    group: root
-#    mode: 0644
-#  register: daemon_reload
-
-- name: Run systemd daemon-reload and restart docker
-  systemd:
-    daemon_reload: true
-    name: docker
-    state: restarted
-  when: daemon_reload.changed
-
-- name: Install epel-release
-  yum:
-    name: epel-release
-    state: present
-
-- name: Install python2-pip
-  yum:
-    name: python2-pip # python2-pip/python34-pip
-    state: present
-
-- name: Install Pip extensions
-  pip:
-    name: "{{ item.name }}"
-    version: "{{ item.version }}"
-    extra_args: "{% if pip_enable_ustc_mirror %} -i https://mirrors.ustc.edu.cn/pypi/web/simple {% endif %}"
-  with_items:
-    - name: docker-py
-      version: "{{ pip_docker_py_version }}"
-    - name: PyYAML
-      version: "{{ pip_pyyaml_version }}"
-    - name: docker-compose
-      version: "{{ pip_docker_compose_version }}"
-
-- name: Add the Users to the docker group
-  user:
-    name: "{{ item }}"
-    createhome: False
-    groups: docker
-    append: True
-  with_items: "{{ docker_users }}"
-
+- include: configure.yml
+- include: packages.yml
+- include: users.yml

@@ -1,0 +1,11 @@
+# Ansible managed
+# Systemd unit file override to specify user/group as well as separate config
+# and data directories.
+[Service]
+
+# Reseting the default Start command
+ExecStart=
+ExecStart=/usr/bin/dockerd {% if docker_registry_mirror_url %} --registry-mirror={{ docker_registry_mirror_url }} {% endif %} {% if docker_insecure_registry_url %} --insecure-registry={{ docker_insecure_registry_url }} {% endif %}
+
+MountFlags=
+MountFlags=slave

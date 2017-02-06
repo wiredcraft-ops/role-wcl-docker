@@ -1,0 +1,20 @@
+---
+# Assuming we're on systemd based Linux Distrib ...
+- name: Prepare Systemd custom config folder
+  file:
+    name: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: 0755
+
+- name: Add docker.service custom config
+  template:
+    src: etc_systemd_system_docker.service.d_custom.conf.j2
+    dest: /etc/systemd/system/docker.service.d/custom.conf
+    owner: root
+  register: docker_systemd_custom_conf
+
+- name: Docker | Restart Docker
+  service:
+    name: docker
+    state: restarted
+  when: docker_systemd_custom_conf.changed
