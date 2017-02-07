@@ -9,7 +9,7 @@ docker_insecure_registry_url: ""
 # Python packages versions
 docker_pip_packages:
   - name: docker-py
-    version: "1.9.0"
+    version: "1.10.6" # required for ansible >= 2.2.0
   - name: PyYAML
     version: "3.12"
   - name: docker-compose
