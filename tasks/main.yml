@@ -5,7 +5,7 @@
   register: docker_installed
   ignore_errors: true
 
-- name: Docker | Add docker-engine repo and install docker
+- name: Docker | Add docker-engine repo and install docker (China specific)
   # shell: "curl -fsSL https://get.docker.com/ | bash -s - {% if docker_china_mirror %}--mirror AzureChinaCloud{% endif %}"
   # Cheat the setup ...
   shell: |
@@ -13,7 +13,14 @@
     sed -e 's/gpgcheck=1/gpgcheck=0/' \
         -e 's/https:\/\/yum.dockerproject.org/http:\/\/mirrors.aliyun.com\/docker-engine\/yum/' | \
     bash -s -
-  when: docker_installed.rc != 0
+  when: docker_installed.rc != 0 and docker_china_mirror
+
+- name: Docker | Add docker-engine repo and install docker (Global)
+  shell: |
+    curl -fsSL https://get.docker.com/ | \
+    bash -s -
+  when: docker_installed.rc != 0 and not docker_china_mirror
+
 
 - name: Docker | Start and Enable docker
   service:
