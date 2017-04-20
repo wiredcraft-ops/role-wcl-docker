@@ -1,9 +1,8 @@
 ---
-# TODO - get rid of this check and rely on a created file or something ...
 - name: Docker | Check if docker is installed
-  command: which docker
-  register: docker_installed
-  ignore_errors: true
+  stat:
+    path: /usr/bin/docker
+  register: docker_bin
 
 - name: Docker | Add docker-engine repo and install docker (China specific)
   # shell: "curl -fsSL https://get.docker.com/ | bash -s - {% if docker_china_mirror %}--mirror AzureChinaCloud{% endif %}"
@@ -13,14 +12,13 @@
     sed -e 's/gpgcheck=1/gpgcheck=0/' \
         -e 's/https:\/\/yum.dockerproject.org/http:\/\/mirrors.aliyun.com\/docker-engine\/yum/' | \
     bash -s -
-  when: docker_installed.rc != 0 and docker_china_mirror
+  when: not docker_bin.stat.exists and docker_china_mirror
 
 - name: Docker | Add docker-engine repo and install docker (Global)
   shell: |
     curl -fsSL https://get.docker.com/ | \
     bash -s -
-  when: docker_installed.rc != 0 and not docker_china_mirror
-
+  when: not docker_bin.stat.exists and not docker_china_mirror
 
 - name: Docker | Start and Enable docker
   service:
