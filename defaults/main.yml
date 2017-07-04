@@ -3,7 +3,7 @@
 docker_china_mirror: false
 
 # Registry
-docker_registry_mirror_url: ""
+docker_registry_mirror_url: "" # https://registry.docker-cn.com - official mirror
 docker_insecure_registry_url: ""
 
 # Python packages versions
