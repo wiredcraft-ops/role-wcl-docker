@@ -4,21 +4,41 @@
     path: /usr/bin/docker
   register: docker_bin
 
-- name: Docker | Add docker-engine repo and install docker (China specific)
-  # shell: "curl -fsSL https://get.docker.com/ | bash -s - {% if docker_china_mirror %}--mirror AzureChinaCloud{% endif %}"
-  # Cheat the setup ...
-  shell: |
-    curl -fsSL https://get.docker.com/ | \
-    sed -e 's/gpgcheck=1/gpgcheck=0/' \
-        -e 's/https:\/\/yum.dockerproject.org/http:\/\/mirrors.aliyun.com\/docker-engine\/yum/' | \
-    bash -s -
-  when: not docker_bin.stat.exists and docker_china_mirror
+# - name: Docker | Add docker-engine repo and install docker (China specific)
+#   # shell: "curl -fsSL https://get.docker.com/ | bash -s - {% if docker_china_mirror %}--mirror AzureChinaCloud{% endif %}"
+#   # Cheat the setup ...
+#   shell: |
+#     curl -fsSL https://get.docker.com/ | \
+#     sed -e 's/gpgcheck=1/gpgcheck=0/' \
+#         -e 's/https:\/\/yum.dockerproject.org/http:\/\/mirrors.aliyun.com\/docker-engine\/yum/' | \
+#     bash -s -
+#   when: not docker_bin.stat.exists and docker_china_mirror
 
-- name: Docker | Add docker-engine repo and install docker (Global)
-  shell: |
-    curl -fsSL https://get.docker.com/ | \
-    bash -s -
-  when: not docker_bin.stat.exists and not docker_china_mirror
+# - name: Docker | Add docker-engine repo and install docker (Global)
+#   shell: |
+#     curl -fsSL https://get.docker.com/ | \
+#     bash -s -
+#   when: not docker_bin.stat.exists and not docker_china_mirror
+
+- name: Docker | Install packages dependencies
+  yum: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: Docker | Add yum repository
+  get_url:
+    url: "https://download.docker.com/linux/centos/docker-ce.repo"
+    dest: /etc/yum.repos.d/docker-ce.repo
+    mode: 0644
+
+- name: Docker | Install docker-ce dependencies
+  yum: 
+    name: "docker-ce"
+    state: present
 
 - name: Docker | Start and Enable docker
   service:
@@ -26,6 +46,6 @@
     state: started
     enabled: true
 
-- include: configure.yml
+# - include: configure.yml
 - include: packages.yml
 - include: users.yml
