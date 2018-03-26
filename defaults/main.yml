@@ -8,6 +8,7 @@ docker_insecure_registry_url: ""
 
 # Python packages versions
 docker_pip_packages:
+  - name: docker
   - name: docker-compose
 
 # Enable pip mirror (default to China when enabled)
