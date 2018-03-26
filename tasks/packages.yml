@@ -20,6 +20,6 @@
 - name: Docker | Install Pip extensions
   pip:
     name: "{{ item.name }}"
-    version: "{{ item.version }}"
+    # version: "{{ item.version }}"
     extra_args: "{% if docker_pip_mirror_enable %} -i {{ docker_pip_mirror }} {% endif %}"
   with_items: "{{ docker_pip_packages }}"
