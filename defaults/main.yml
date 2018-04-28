@@ -9,7 +9,7 @@ docker_insecure_registry_url: ""
 # Python packages versions
 docker_pip_packages:
   - name: docker
-    version: '<3.0'
+    version: '2.7.0'
   - name: docker-compose
     version: 1.20.1
 
