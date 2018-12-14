@@ -40,6 +40,12 @@
     name: "docker-ce"
     state: present
 
+- name: Change docker0 ip
+  template:
+    src: docker-daemon.json.j2
+    dest: /etc/docker/daemon.json
+  when: docker0_ip is defined
+
 - name: Docker | Start and Enable docker
   service:
     name: docker
