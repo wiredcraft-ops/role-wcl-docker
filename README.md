@@ -25,6 +25,9 @@ docker_china_mirror: false
 docker_registry_mirror_url: ""
 docker_insecure_registry_url: ""
 
+# Customize docker 0 bridge ip
+docker0_ip: ""
+
 # Python packages versions
 docker_pip_packages:
   - name: docker-py
