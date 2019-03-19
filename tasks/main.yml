@@ -21,7 +21,7 @@
 #   when: not docker_bin.stat.exists and not docker_china_mirror
 
 - name: Docker | Install packages dependencies
-  yum: 
+  yum:
     name: "{{ item }}"
     state: present
   with_items:
@@ -36,9 +36,16 @@
     mode: 0644
 
 - name: Docker | Install docker-ce dependencies
-  yum: 
+  yum:
     name: "docker-ce"
     state: present
+
+- name: Create /etc/docker directory
+  file:
+    path: /etc/docker
+    state: directory
+    owner: root
+    group: root
 
 - name: Change docker0 ip
   template:
