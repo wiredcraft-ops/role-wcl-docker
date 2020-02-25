@@ -9,11 +9,11 @@ docker_insecure_registry_url: ""
 # Python packages versions
 docker_pip_packages:
   - name: docker-compose
-    version: 1.20.1
+    version: 1.24.1
 
 # Enable pip mirror (default to China when enabled)
 # requires a trusted repo - else need to add "--trusted-host DOMAIN"
-# e.g. 
+# e.g.
 # docker_pip_mirror: "http://pypi.douban.com/simple --trusted-host pypi.douban.com"
 docker_pip_mirror_enable: false
 docker_pip_mirror: https://mirrors.ustc.edu.cn/pypi/web/simple
