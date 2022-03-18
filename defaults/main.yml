@@ -9,7 +9,9 @@ docker_insecure_registry_url: ""
 # Python packages versions
 docker_pip_packages:
   - name: docker-compose
-    version: 1.24.1
+    # last version support python2.7
+    # see https://pypi.org/project/docker-compose/1.26.2/
+    version: 1.26.2
 
 # Enable pip mirror (default to China when enabled)
 # requires a trusted repo - else need to add "--trusted-host DOMAIN"
