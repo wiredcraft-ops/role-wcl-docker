@@ -21,6 +21,7 @@
 #   when: not docker_bin.stat.exists and not docker_china_mirror
 
 - name: Docker | Install packages dependencies
+  when: ansible_os_family == 'RedHat'
   yum:
     name: "{{ item }}"
     state: present
@@ -45,6 +46,23 @@
 - name: Docker | Install docker on Amazon Linux
   command: amazon-linux-extras install docker -y
   when: ansible_distribution == 'Amazon'
+
+# we prefer newer version of docker
+# see https://wiki.debian.org/AptConfiguration
+- name: Docker | set apt package pin preference
+  when: ansible_os_family == 'Debian'
+  template:
+    src: apt_preference_docker.j2
+    dest: /etc/apt/preferences.d/docker
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Docker | Install docker on debian"
+  when: ansible_os_family == 'Debian'
+  package:
+    name: "docker.io"
+    state: present
 
 - name: Create /etc/docker directory
   file:
